@@ -18,6 +18,7 @@ LOAD_MODEL = False
 
 DB = 'CelebA'  # CelebA | MNIST | LSUN_Chruch | LSUN_Bedroom
 if DB == 'MNIST':
+	Z_DIM = 10
     CHANNELS = 1
     EPOCHS = 10
 else:
