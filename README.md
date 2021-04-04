@@ -1,5 +1,5 @@
 # Pytorch-DCGAN
-Pytorch implementation of DCGAN for generating 64x64 images.
+Pytorch implementation of [DCGAN](https://arxiv.org/abs/1511.06434) for generating 64x64 images.
 
 ### LSUN Dataset
 To download LSUN dataset follow the steps at [https://github.com/fyu/lsun](https://github.com/fyu/lsun)
