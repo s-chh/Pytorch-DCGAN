@@ -1,7 +1,6 @@
 from torch import optim
 import os
 import torchvision.utils as vutils
-import numpy as np
 from torchvision import datasets
 from torchvision import transforms
 import torch
@@ -44,11 +43,9 @@ def generate_imgs(z, epoch=0):
 
 
 # Data loaders
-mean = np.array([0.5])
-std = np.array([0.5])
 transform = transforms.Compose([transforms.Resize([64, 64]),
 								transforms.ToTensor(),
-								transforms.Normalize(mean, std)])
+								transforms.Normalize([0.5], [0.5])])
 if DB == 'LSUN_Church':
 	dataset = datasets.LSUN(db_path, classes=['church_outdoor_train'], transform=transform)
 elif DB == 'LSUN_Bedroom':
