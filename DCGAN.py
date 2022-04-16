@@ -22,30 +22,23 @@ if DB == 'MNIST':
 else:
 	CHANNELS = 3
 
-# Directories for storing model and output samples
+# Directories for storing data, model and output samples
+db_path = os.path.join('./data', DB)
+if not os.path.exists(db_path):
+	os.makedirs(db_path)
 model_path = os.path.join('./model', DB)
 if not os.path.exists(model_path):
 	os.makedirs(model_path)
 samples_path = os.path.join('./samples', DB)
 if not os.path.exists(samples_path):
 	os.makedirs(samples_path)
-db_path = os.path.join('./data', DB)
-if not os.path.exists(samples_path):
-	os.makedirs(samples_path)
-
-
-# Method for storing generated images
-def generate_imgs(z, epoch=0):
-	gen.eval()
-	fake_imgs = gen(z)
-	fake_imgs_ = vutils.make_grid(fake_imgs, normalize=True, nrow=math.ceil(IMGS_TO_DISPLAY ** 0.5))
-	vutils.save_image(fake_imgs_, os.path.join(samples_path, 'sample_' + str(epoch) + '.png'))
 
 
 # Data loaders
 transform = transforms.Compose([transforms.Resize([64, 64]),
 								transforms.ToTensor(),
 								transforms.Normalize([0.5], [0.5])])
+
 if DB == 'LSUN_Church':
 	dataset = datasets.LSUN(db_path, classes=['church_outdoor_train'], transform=transform)
 elif DB == 'LSUN_Bedroom':
@@ -60,8 +53,11 @@ else:
 	print("Incorrect dataset")
 	exit(0)
 
-data_loader = torch.utils.data.DataLoader(dataset=dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=8,
-										  drop_last=True)
+data_loader = torch.utils.data.DataLoader(dataset=dataset, 
+                                        batch_size=BATCH_SIZE, 
+                                        shuffle=True, 
+                                        num_workers=4,
+                                        drop_last=True)
 
 # Fix images for viz
 fixed_z = torch.randn(IMGS_TO_DISPLAY, Z_DIM)
@@ -69,6 +65,13 @@ fixed_z = torch.randn(IMGS_TO_DISPLAY, Z_DIM)
 # Labels
 real_label = torch.ones(BATCH_SIZE)
 fake_label = torch.zeros(BATCH_SIZE)
+
+# Method for storing generated images
+def generate_imgs(z, epoch=0):
+	gen.eval()
+	fake_imgs = gen(z)
+	fake_imgs_ = vutils.make_grid(fake_imgs, normalize=True, nrow=math.ceil(IMGS_TO_DISPLAY ** 0.5))
+	vutils.save_image(fake_imgs_, os.path.join(samples_path, 'sample_' + str(epoch) + '.png'))
 
 
 # Networks
